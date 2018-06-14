@@ -18,10 +18,12 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cz.msebera.android.httpclient.Header;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPriceTextView = (TextView) findViewById(R.id.priceLabel);
-        Spinner spinner = (Spinner) findViewById(R.id.currency_spinner);
+        mPriceTextView = findViewById(R.id.priceLabel);
+        Spinner spinner = findViewById(R.id.currency_spinner);
 
         // Create an ArrayAdapter using the String array and a spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -59,8 +61,28 @@ public class MainActivity extends AppCompatActivity {
 
     }//end onCreate
 
+
+    private void getCoinPrice(){
+        String fiat = "USD";
+        String crypto = "BTC";
+
+        RequestParams params = new RequestParams();
+        params.put("crypto", crypto);
+        params.put("fiat", fiat);
+        letsDoSomeNetworking(params);
+
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_CODE);
+            return;
+        }
+
+
+
+    }//end getCoinPrice
+
+
     // TODO: complete the letsDoSomeNetworking() method
-    private void letsDoSomeNetworking(String url) {
+    private void letsDoSomeNetworking(RequestParams params) {
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(BASE_URL, params, new JsonHttpResponseHandler() {
@@ -69,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
                 Log.d("Bitcoin-Ticker", "JSON: " + response.toString());
-                WeatherDataModel weatherData = WeatherDataModel.fromJson(response);
-                updateUI(weatherData);
+                BitcoinDataModel bitcoinData = BitcoinDataModel.fromJSON(response);
+                updateUI(bitcoinData);
             }
 
             @Override
@@ -79,24 +101,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Bitcoin-Ticker", "Request fail! Status code: " + statusCode);
                 Log.d("Bitcoin-Ticker", "Fail response: " + response);
                 Log.e("ERROR", e.toString());
-                Toast.makeText(WeatherController.this, "Request Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Request Failed", Toast.LENGTH_SHORT).show();
             }
         });
 
 
     }//end letsDoSomeNetworking
-
-
-    private void getCoinPrice(){
-
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_CODE);
-                return;
-        }
-
-
-
-    }//end getCoinPrice
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -111,5 +121,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }//end onRequestPermissionsResult
+
+    private void updateUI(BitcoinDataModel bitcoin){
+        mPriceTextView.setText(bitcoin.getPrice());
+    }//end updateUI
 
 }//end class

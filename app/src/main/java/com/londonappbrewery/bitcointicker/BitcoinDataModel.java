@@ -15,14 +15,17 @@ public class BitcoinDataModel {
             BitcoinDataModel bitcoinData = new BitcoinDataModel();
 
             bitcoinData.mPrice = jsonObject.getString("last");
+
+            return bitcoinData;
         } catch(JSONException e){
             e.printStackTrace();
             return null;
         }//end try/catch
 
-
-
     }//end BitcoinDataModel
 
 
-}
+    public String getPrice() {
+        return mPrice;
+    }
+}//end class
