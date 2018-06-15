@@ -1,6 +1,7 @@
 package com.londonappbrewery.bitcointicker;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,8 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
+
 import cz.msebera.android.httpclient.Header;
 
 
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Member Variables:
     TextView mPriceTextView;
+    String mCurrencyType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.currency_spinner);
 
         // Create an ArrayAdapter using the String array and a spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.currency_array, R.layout.spinner_item);
 
         // Specify the layout to use when the list of choices appears
@@ -58,27 +62,74 @@ public class MainActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         // TODO: Set an OnItemSelected listener on the spinner
+            spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    Object item = parent.getItemAtPosition(position);
+                    if(item !=null){
+                        mCurrencyType = item.toString();
+                        getCoinPrice();
+                    }
+
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
 
     }//end onCreate
 
 
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.d("Bitcoin-ticker","onResume() called");
+
+        //getCoinPrice();
+
+
+    }//end onResume
+
     private void getCoinPrice(){
-        String fiat = "USD";
+        //TODO need to replace hardcoded USD to point at what the spinner comes back with
+        String fiat = mCurrencyType;
         String crypto = "BTC";
+
+        Log.d("Bitcoin-Ticker","the value of the 'fiat' variable used in url is " + fiat);
 
         RequestParams params = new RequestParams();
         params.put("crypto", crypto);
         params.put("fiat", fiat);
         letsDoSomeNetworking(params);
 
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_CODE);
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, REQUEST_CODE);
             return;
         }
 
 
 
     }//end getCoinPrice
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions,grantResults);
+
+        if (requestCode == REQUEST_CODE) {
+            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Log.d("Bitcoin-Ticker","onRequestPermissionsResult(): PermissionGranted!");
+                getCoinPrice();
+            } else {
+                Log.d("Bitcoin-Ticker","Permission denied =(");
+            }
+        }
+    }//end onRequestPermissionsResult
+
 
 
     // TODO: complete the letsDoSomeNetworking() method
@@ -90,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
-                Log.d("Bitcoin-Ticker", "JSON: " + response.toString());
+                Log.d("Bitcoin-Ticker", "letsDoSomeNetworking() JSON: " + response.toString());
                 BitcoinDataModel bitcoinData = BitcoinDataModel.fromJSON(response);
                 updateUI(bitcoinData);
             }
@@ -108,22 +159,26 @@ public class MainActivity extends AppCompatActivity {
 
     }//end letsDoSomeNetworking
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions,grantResults);
-
-        if (requestCode == REQUEST_CODE) {
-            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Log.d("Bitcoin-Ticker","onRequestPermissionsResult(): PermissionGranted!");
-                getCoinPrice();
-            } else {
-                Log.d("Bitcoin-Ticker","Permission denied =(");
-            }
-        }
-    }//end onRequestPermissionsResult
-
     private void updateUI(BitcoinDataModel bitcoin){
-        mPriceTextView.setText(bitcoin.getPrice());
+        Log.d("Bitcoin-Ticker","inside of updateUI now");
+        String formatPrice=bitcoin.getPrice();
+        Log.d("Bitcoin-Ticker","value of formatPrice is "+formatPrice);
+        String formattedPrice;
+
+       // NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        //formattedPrice=formatter.format(formatPrice);
+
+        mPriceTextView.setText(formatPrice);
+
     }//end updateUI
 
+
+
+
+    public String getCountry() {
+
+        String blah = mCurrencyType;
+
+        return blah;
+    }
 }//end class
