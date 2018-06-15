@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Member Variables:
     TextView mPriceTextView;
-    String mCurrencyType;
+    String mCurrencyType="AUD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
                     Object item = parent.getItemAtPosition(position);
                     if(item !=null){
                         mCurrencyType = item.toString();
+                        setCurrencyType(mCurrencyType);
+                        Log.d("Bitcoin-Ticker","OnItemSelected - the value of the getter is "+getCurrencyType());
                         getCoinPrice();
                     }
 
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d("Bitcoin-ticker","onResume() called");
 
-        //getCoinPrice();
+        getCoinPrice();
 
 
     }//end onResume
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         String fiat = mCurrencyType;
         String crypto = "BTC";
 
-        Log.d("Bitcoin-Ticker","the value of the 'fiat' variable used in url is " + fiat);
+        Log.d("Bitcoin-Ticker","getCoinPrice() - the value of the 'fiat' variable used in url is " + fiat);
 
         RequestParams params = new RequestParams();
         params.put("crypto", crypto);
@@ -173,12 +175,11 @@ public class MainActivity extends AppCompatActivity {
     }//end updateUI
 
 
+    public String getCurrencyType() {
+        return mCurrencyType;
+    }
 
-
-    public String getCountry() {
-
-        String blah = mCurrencyType;
-
-        return blah;
+    public void setCurrencyType(String currencyType) {
+        mCurrencyType = currencyType;
     }
 }//end class

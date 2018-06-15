@@ -17,19 +17,19 @@ public class BitcoinDataModel {
 
 
     //PriceDataModel from a JSON
-    public static BitcoinDataModel fromJSON(JSONObject jsonObject){
-        MainActivity tc = new MainActivity();
-        String country = tc.getCountry();
+    public  BitcoinDataModel fromJSON(JSONObject jsonObject){
 
-        Log.d("Bitcoin-Ticker","the value from currency getter is "+country);
         try {
+            MainActivity tc = new MainActivity();
+            String country = tc.getCurrencyType();
+
+            Log.d("Bitcoin-Ticker","BitcoinDataModel- the value from currency getter is "+country);
+
             BitcoinDataModel bitcoinData = new BitcoinDataModel();
-
-
 
             //TODO need to change BTCUSD to something like BTC+StringVariable
             bitcoinData.tmpPrice = jsonObject.getJSONObject("BTC"+country).getLong("last");
-            Log.d("bitcoin-ticker","the value of BTC+country is "+"BTC"+country);
+            Log.d("bitcoin-ticker"," BitCoinDataModel - the value of BTC+country is "+"BTC"+country);
 
             //bitcoinData.tmpRound = Math.round(bitcoinData.tmpPrice);
             bitcoinData.mPrice = Double.toString(bitcoinData.tmpPrice);
@@ -48,4 +48,5 @@ public class BitcoinDataModel {
     public String getPrice() {
         return mPrice;
     }
+
 }//end class
