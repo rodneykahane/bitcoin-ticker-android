@@ -1,5 +1,8 @@
 package com.londonappbrewery.bitcointicker;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -7,6 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Stack;
 
 public class BitcoinDataModel {
 
@@ -17,19 +23,24 @@ public class BitcoinDataModel {
 
 
     //PriceDataModel from a JSON
+    @TargetApi(Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static BitcoinDataModel fromJSON(JSONObject jsonObject){
 
-        try {
-            MainActivity tc = new MainActivity();
-            String country = tc.getCurrencyType();
+        //using this to parse the currency format
+        String countryObjectString= jsonObject.toString();
+        String country = countryObjectString.substring(2,8);
 
-            Log.d("Bitcoin-Ticker","BitcoinDataModel- the value from currency getter is "+country);
+
+        try {
+
+            Log.d("Bitcoin-Ticker","BitcoinDataModel- the value from string chopping is "+country);
 
             BitcoinDataModel bitcoinData = new BitcoinDataModel();
 
-            //TODO need to change BTCUSD to something like BTC+StringVariable
-            bitcoinData.tmpPrice = jsonObject.getJSONObject("BTC"+country).getLong("last");
-            Log.d("bitcoin-ticker"," BitCoinDataModel - the value of BTC+country is "+"BTC"+country);
+
+            bitcoinData.tmpPrice = jsonObject.getJSONObject(country).getLong("last");
+            Log.d("Bitcoin-ticker"," BitCoinDataModel - the value of BTCcountry is "+"BTC"+country);
 
             //bitcoinData.tmpRound = Math.round(bitcoinData.tmpPrice);
             bitcoinData.mPrice = Double.toString(bitcoinData.tmpPrice);

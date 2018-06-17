@@ -3,8 +3,10 @@ package com.londonappbrewery.bitcointicker;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -140,11 +142,13 @@ public class MainActivity extends AppCompatActivity {
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(BASE_URL, params, new JsonHttpResponseHandler() {
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
                 Log.d("Bitcoin-Ticker", "letsDoSomeNetworking() JSON: " + response.toString());
                 BitcoinDataModel bitcoinData = BitcoinDataModel.fromJSON(response);
+                Log.d("Bitcoin-Ticker:","letsDoSomeNetowrking() - the value of mCurrencyType is "+mCurrencyType);
                 updateUI(bitcoinData);
             }
 
@@ -169,17 +173,21 @@ public class MainActivity extends AppCompatActivity {
 
        // NumberFormat formatter = NumberFormat.getCurrencyInstance();
         //formattedPrice=formatter.format(formatPrice);
-
+        setCurrencyType(mCurrencyType);
+        Log.d("Bitcoin-Ticker:","updateUI() the value of mCurrencyType is "+mCurrencyType);
         mPriceTextView.setText(formatPrice);
 
     }//end updateUI
 
 
     public String getCurrencyType() {
+
+
         return mCurrencyType;
     }
 
     public void setCurrencyType(String currencyType) {
+
         mCurrencyType = currencyType;
     }
 }//end class
