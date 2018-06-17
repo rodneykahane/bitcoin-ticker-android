@@ -36,9 +36,6 @@ public class MainActivity extends AppCompatActivity {
     // Constants:
     // TODO: Create the base URL
     private final String BASE_URL = "https://apiv2.bitcoinaverage.com/indices/global/ticker/short";
-    //secret key = MGZiYjI5MTBhYWJhNDA4NWIzYzAyMTVjNmI3YTJiYWJlNzNhZWIyZWUwMTQ0YzcwODcyZWQ5ODM1ZjI3ZGEyMw
-    //public key = MTRlMWFjMDhiNjc3NDE4ZmI5Y2ZmMmVjZWZhMjdiM2U
-    //https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC&fiat=USD //string to get bitcoin price
     final int REQUEST_CODE = 123;
 
     // Member Variables:
@@ -75,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Bitcoin-Ticker","OnItemSelected - the value of the getter is "+getCurrencyType());
                         getCoinPrice();
                     }
-
-
                 }
 
                 @Override
