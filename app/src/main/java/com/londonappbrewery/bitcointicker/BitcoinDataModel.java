@@ -17,7 +17,7 @@ public class BitcoinDataModel {
 
 
     //PriceDataModel from a JSON
-    public  BitcoinDataModel fromJSON(JSONObject jsonObject){
+    public static BitcoinDataModel fromJSON(JSONObject jsonObject){
 
         try {
             MainActivity tc = new MainActivity();
