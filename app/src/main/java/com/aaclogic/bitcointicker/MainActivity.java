@@ -1,7 +1,6 @@
-package com.londonappbrewery.bitcointicker;
+package com.aaclogic.bitcointicker;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,10 +22,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.NumberFormat;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -36,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     // Constants:
     // TODO: Create the base URL
     private final String BASE_URL = "https://apiv2.bitcoinaverage.com/indices/global/ticker/short";
+
     final int REQUEST_CODE = 123;
 
     // Member Variables:

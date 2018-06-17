@@ -1,4 +1,4 @@
-package com.londonappbrewery.bitcointicker;
+package com.aaclogic.bitcointicker;
 
 import org.junit.Test;
 

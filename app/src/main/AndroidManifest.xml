@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.londonappbrewery.bitcointicker"
+<manifest package="com.aaclogic.bitcointicker"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity"
+        <activity android:name="com.aaclogic.bitcointicker.MainActivity"
             android:screenOrientation="portrait">
 
             <intent-filter>

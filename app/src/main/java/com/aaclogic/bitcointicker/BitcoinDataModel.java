@@ -1,18 +1,12 @@
-package com.londonappbrewery.bitcointicker;
+package com.aaclogic.bitcointicker;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Stack;
 
 public class BitcoinDataModel {
 
